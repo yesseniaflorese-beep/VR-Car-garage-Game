@@ -52,7 +52,7 @@ public class TerminalLogic : MonoBehaviour
 
     public void Disconnect()
     {
-        if (!correct || Completed) return;
+        if (!correct || Completed || !GameFlowManager.Playing) return;
         correct = false;
         connectedCorrect--;
         OnConnectionsChanged?.Invoke(connectedCorrect);

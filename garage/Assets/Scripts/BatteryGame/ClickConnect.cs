@@ -45,16 +45,7 @@ public class ClickConnect : MonoBehaviour
 
     void OnClampClicked(ClampPolarity c)
     {
-        var t = FindTerminalOf(c);
-        if (t != null)                       // estaba conectada: la sacamos
-        {
-            t.Release();
-            c.transform.SetPositionAndRotation(c.homePos, c.homeRot);
-            var rb = c.GetComponent<Rigidbody>();
-            if (rb) rb.isKinematic = true;
-            Select(null);
-            return;
-        }
+        if (FindTerminalOf(c) != null) return;   // ya conectada: no se puede quitar
         Select(selected == c ? null : c);
     }
 

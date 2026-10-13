@@ -32,12 +32,25 @@ public class TerminalXRAdapter : MonoBehaviour
 
     void OnIn(SelectEnterEventArgs a)
     {
-        var clamp = a.interactableObject.transform.GetComponent<ClampPolarity>();
-        if (clamp == null || !GameFlowManager.Playing || !logic.TryConnect(clamp))
-            StartCoroutine(Reject(a.interactableObject));
+        var item = a.interactableObject;
+        var clamp = item.transform.GetComponent<ClampPolarity>();
+
+        if (clamp != null && GameFlowManager.Playing && logic.TryConnect(clamp))
+        {
+            Lock(clamp);                 // conexión correcta: queda fija
+            return;
+        }
+        StartCoroutine(Reject(item));    // incorrecta: sale despedida
     }
 
     void OnOut(SelectExitEventArgs a) => logic.Disconnect();
+
+    // Sin colliders, las manos y el rayo ya no pueden agarrarla
+    void Lock(ClampPolarity clamp)
+    {
+        foreach (var col in clamp.GetComponentsInChildren<Collider>())
+            col.enabled = false;
+    }
 
     IEnumerator Reject(IXRSelectInteractable item)
     {
